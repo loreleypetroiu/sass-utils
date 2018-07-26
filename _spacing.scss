@@ -1,0 +1,60 @@
+$spacer: 1rem !default;
+$spacers: () !default;
+$spacers: map-merge((
+  0: 0,
+  1: ($spacer * 0.5),
+  2: ($spacer * 1),
+  3: ($spacer * 2)
+), $spacers);
+
+
+@each $pt in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($pt) {
+    $infix: breakpoint-infix($pt, $grid-breakpoints);
+    @each $prop, $abbr in (margin: m, padding: p) {
+      @each $size, $len in $spacers {
+        .#{$abbr}#{$infix}-#{$size} {
+          #{$prop}: $len!important;
+        }
+
+        .#{$abbr}t#{$infix}-#{$size},
+        .#{$abbr}y#{$infix}-#{$size} {
+           #{$prop}-top: $len!important;
+        }
+
+        .#{$abbr}r#{$infix}-#{$size},
+        .#{$abbr}x#{$infix}-#{$size} {
+          #{$prop}-right: $len!important;
+        }
+
+        .#{$abbr}l#{$infix}-#{$size},
+        .#{$abbr}x#{$infix}-#{$size} {
+          #{$prop}-left: $len!important;
+        }
+
+        .#{$abbr}b#{$infix}-#{$size},
+        .#{$abbr}y#{$infix}-#{$size} {
+           #{$prop}-bottom: $len!important;
+        }
+      }
+    }
+
+    .m#{$infix}-auto { margin: auto !important; }
+    .mt#{$infix}-auto,
+    .my#{$infix}-auto {
+      margin-top: auto !important;
+    }
+    .mr#{$infix}-auto,
+    .mx#{$infix}-auto {
+      margin-right: auto !important;
+    }
+    .mb#{$infix}-auto,
+    .my#{$infix}-auto {
+      margin-bottom: auto !important;
+    }
+    .ml#{$infix}-auto,
+    .mx#{$infix}-auto {
+      margin-left: auto !important;
+    }
+  }
+}

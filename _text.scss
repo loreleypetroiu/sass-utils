@@ -1,0 +1,8 @@
+@each $pt in map-keys($grid-breakpoints) {
+  $infix: breakpoint-infix($pt, $grid-breakpoints);
+  @include media-breakpoint-up($pt) {
+    .text#{$infix}-center {text-align: center!important}
+    .text#{$infix}-left {text-align: left!important}
+    .text#{$infix}-right {text-align: right!important}
+  }
+}

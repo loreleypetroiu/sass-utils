@@ -1,0 +1,10 @@
+@each $pt in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($pt) {
+    $infix: breakpoint-infix($pt, $grid-breakpoints);
+    .d#{$infix}-none {display: none!important};
+    .d#{$infix}-block {display: block!important};
+    .d#{$infix}-inline {display: inline!important};
+    .d#{$infix}-flex {display: flex!important};
+    .d#{$infix}-inline-block {display: inline-block!important};
+  }
+}

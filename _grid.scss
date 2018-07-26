@@ -1,0 +1,125 @@
+$grid-width: 1200px !default;
+$gutter: 2rem !default;
+$grid-columns: 12 !default;
+
+$enable-grid-order: false !default;
+$enable-grid-offset: false !default;
+
+$enable-grid-offset: true;
+$enable-grid-order: true;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 36em,
+  md: 48em,
+  lg: 62em
+);
+
+@function breakpoint-min($name,  $grid-breakpoints) {
+  $min: map-get($grid-breakpoints, $name);
+  @return if($min != 0, $min, null);
+}
+@function breakpoint-infix($name, $breakpoints: $grid-breakpoints) {
+  @return if(breakpoint-min($name, $breakpoints) == null, "", "-#{$name}");
+}
+
+@mixin media-breakpoint-up($point, $pts: $grid-breakpoints) {
+  $min: breakpoint-min($point, $pts);
+  @if $min {
+    @media (min-width: $min) { @content; }
+  }
+  @else {
+    @content;
+  }
+}
+
+@mixin col-offset($size, $columns) {
+  $num: $size / $columns;
+  margin-left: if($num == 0, 0, percentage($num));
+}
+
+@mixin col-numbered($column) {
+  flex: 0 0 100% / $grid-columns * $column;
+  max-width: 100% / $grid-columns * $column;
+}
+
+%grid-column {
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right:  $gutter/2;
+  padding-left: $gutter/2;
+}
+
+.container {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: $grid-width;
+  padding-left: $gutter;
+  padding-right: $gutter;
+}
+
+.row {
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-right: -$gutter/2;
+  margin-left: -$gutter/2;
+}
+
+.row.reverse {
+  flex-direction: row-reverse;
+}
+
+.col.reverse {
+  flex-direction: column-reverse;
+}
+
+@each $point in map-keys($grid-breakpoints) {
+    $infix: breakpoint-infix($point, $grid-breakpoints);
+
+    @for $i from 1 through $grid-columns {
+      .col#{$infix}-#{$i} {
+        @extend %grid-column;
+      }
+    }
+    .col#{$infix} {
+      @extend %grid-column;
+    }
+
+  @include media-breakpoint-up($point, $grid-breakpoints) {
+    .col#{$infix} {
+      flex-basis: 0;
+      flex-grow: 1;
+      max-width: 100%;
+    }
+
+    @for $i from 1 through $grid-columns {
+      .col#{$infix}-#{$i} {
+        @include col-numbered($i);
+      }
+    }
+
+    @if $enable-grid-order == true {
+      .order#{$infix}-first { order: -1; }
+      .order#{$infix}-last { order: $grid-columns + 1; }
+
+      @for $i from 0 through $grid-columns {
+        .order#{$infix}-#{$i} { order: $i; }
+      }
+    }
+
+    @if $enable-grid-offset == true {
+      @for $i from 0 through ($grid-columns - 1) {
+        @if not ($infix == "" and $i == 0) {
+          .offset#{$infix}-#{$i} {
+            @include col-offset($i, $grid-columns);
+          }
+        }
+      }
+    }
+
+  }
+}
