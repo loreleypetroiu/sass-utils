@@ -8,30 +8,6 @@ $enable-grid-offset: false !default;
 $enable-grid-offset: true;
 $enable-grid-order: true;
 
-$grid-breakpoints: (
-  xs: 0,
-  sm: 36em,
-  md: 48em,
-  lg: 62em
-);
-
-@function breakpoint-min($name,  $grid-breakpoints) {
-  $min: map-get($grid-breakpoints, $name);
-  @return if($min != 0, $min, null);
-}
-@function breakpoint-infix($name, $breakpoints: $grid-breakpoints) {
-  @return if(breakpoint-min($name, $breakpoints) == null, "", "-#{$name}");
-}
-
-@mixin media-breakpoint-up($point, $pts: $grid-breakpoints) {
-  $min: breakpoint-min($point, $pts);
-  @if $min {
-    @media (min-width: $min) { @content; }
-  }
-  @else {
-    @content;
-  }
-}
 
 @mixin col-offset($size, $columns) {
   $num: $size / $columns;
@@ -58,7 +34,6 @@ $grid-breakpoints: (
   padding-left: $gutter;
   padding-right: $gutter;
 }
-
 .row {
   box-sizing: border-box;
   display: flex;
@@ -67,14 +42,6 @@ $grid-breakpoints: (
   flex-wrap: wrap;
   margin-right: -$gutter/2;
   margin-left: -$gutter/2;
-}
-
-.row.reverse {
-  flex-direction: row-reverse;
-}
-
-.col.reverse {
-  flex-direction: column-reverse;
 }
 
 @each $point in map-keys($grid-breakpoints) {
