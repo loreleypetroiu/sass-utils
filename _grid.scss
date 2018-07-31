@@ -1,30 +1,21 @@
-$grid-width: 1200px !default;
+//variables
+$grid-width: 75em !default;
 $gutter: 2rem !default;
 $grid-columns: 12 !default;
-
-$enable-grid-order: false !default;
-$enable-grid-offset: false !default;
-
-$enable-grid-offset: true;
-$enable-grid-order: true;
-
-
-@mixin col-offset($size, $columns) {
-  $num: $size / $columns;
-  margin-left: if($num == 0, 0, percentage($num));
+html {
+  font-size: 100%;
 }
+$grid-breakpoints: (
+  xs: 0,
+  sm: 36em,
+  md: 48em,
+  lg: 62em,
+  //xl: 75em
+);
 
-@mixin col-numbered($column) {
-  flex: 0 0 100% / $grid-columns * $column;
-  max-width: 100% / $grid-columns * $column;
-}
-
-%grid-column {
-  position: relative;
-  width: 100%;
-  min-height: 1px;
-  padding-right:  $gutter/2;
-  padding-left: $gutter/2;
+@mixin grid-numbered($no) {
+  flex: 0 0 percentage($no/$grid-columns);
+  max-width: percentage($no/$grid-columns);
 }
 
 .container {
@@ -44,49 +35,49 @@ $enable-grid-order: true;
   margin-left: -$gutter/2;
 }
 
-@each $point in map-keys($grid-breakpoints) {
-    $infix: breakpoint-infix($point, $grid-breakpoints);
+%grid-column {
+  position: relative;
+  width: 100%;
+  min-height: 1px;
+  padding-right:  $gutter/2;
+  padding-left: $gutter/2;
+}
 
-    @for $i from 1 through $grid-columns {
-      .col#{$infix}-#{$i} {
-        @extend %grid-column;
-      }
-    }
-    .col#{$infix} {
+
+@each $point in map-keys($grid-breakpoints) {
+  $infix: get-infix($point, $grid-breakpoints);
+
+  .col#{$infix} {
+    @extend %grid-column;
+  }
+  @for $i from 1 through $grid-columns {
+    .col#{$infix}-#{$i} {
       @extend %grid-column;
     }
+  }
 
-  @include media-breakpoint-up($point, $grid-breakpoints) {
+  @include breakpoint-up($point, $grid-breakpoints) {
     .col#{$infix} {
       flex-basis: 0;
       flex-grow: 1;
       max-width: 100%;
     }
-
     @for $i from 1 through $grid-columns {
       .col#{$infix}-#{$i} {
-        @include col-numbered($i);
+        @include grid-numbered($i);
       }
     }
 
-    @if $enable-grid-order == true {
-      .order#{$infix}-first { order: -1; }
-      .order#{$infix}-last { order: $grid-columns + 1; }
-
-      @for $i from 0 through $grid-columns {
-        .order#{$infix}-#{$i} { order: $i; }
+    //offset classes
+    @for $i from 1 through $grid-columns - 1 {
+      .offset#{$infix}-#{$i} {
+        margin-left: percentage($i/$grid-columns);
       }
     }
 
-    @if $enable-grid-offset == true {
-      @for $i from 0 through ($grid-columns - 1) {
-        @if not ($infix == "" and $i == 0) {
-          .offset#{$infix}-#{$i} {
-            @include col-offset($i, $grid-columns);
-          }
-        }
-      }
+    //order classes
+    @for $i from 1 through $grid-columns {
+      .order#{$infix}-#{$i} {  order: $i;  }
     }
-
   }
 }

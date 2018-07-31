@@ -1,40 +1,33 @@
+//spacing
 $spacer: 1rem !default;
-$spacers: () !default;
-$spacers: map-merge((
-  0: 0,
-  1: ($spacer * 0.5),
-  2: ($spacer * 1),
-  3: ($spacer * 2)
-), $spacers);
+$spacers: (
+  0: $spacer * 0,
+  1: $spacer * 1.5,
+  2: $spacer * 2.5,
+  3: $spacer * 3.5
+)!default;
 
+$space-prop: (
+  margin: m,
+  padding: p
+);
 
-@each $pt in map-keys($grid-breakpoints) {
-  @include media-breakpoint-up($pt) {
-    $infix: breakpoint-infix($pt, $grid-breakpoints);
-    @each $prop, $abbr in (margin: m, padding: p) {
+@each $point in map-keys($grid-breakpoints) {
+  $infix: get-infix($point, $grid-breakpoints);
+  @include breakpoint-up($point, $grid-breakpoints) {
+    @each $prop, $abbr in $space-prop {
       @each $size, $len in $spacers {
-        .#{$abbr}#{$infix}-#{$size} {
-          #{$prop}: $len!important;
-        }
-
         .#{$abbr}t#{$infix}-#{$size},
         .#{$abbr}y#{$infix}-#{$size} {
-           #{$prop}-top: $len!important;
-        }
-
-        .#{$abbr}r#{$infix}-#{$size},
-        .#{$abbr}x#{$infix}-#{$size} {
-          #{$prop}-right: $len!important;
-        }
-
-        .#{$abbr}l#{$infix}-#{$size},
-        .#{$abbr}x#{$infix}-#{$size} {
-          #{$prop}-left: $len!important;
+          #{$prop}-top: $len;
         }
 
         .#{$abbr}b#{$infix}-#{$size},
         .#{$abbr}y#{$infix}-#{$size} {
-           #{$prop}-bottom: $len!important;
+          #{$prop}-bottom: $len;
+        }
+        .#{$abbr}#{$infix}-#{$size} {
+            #{$prop}: $len;
         }
       }
     }

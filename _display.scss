@@ -1,10 +1,17 @@
-@each $pt in map-keys($grid-breakpoints) {
-  @include media-breakpoint-up($pt) {
-    $infix: breakpoint-infix($pt, $grid-breakpoints);
-    .d#{$infix}-none {display: none!important};
-    .d#{$infix}-block {display: block!important};
-    .d#{$infix}-inline {display: inline!important};
-    .d#{$infix}-flex {display: flex!important};
-    .d#{$infix}-inline-block {display: inline-block!important};
+//Display
+$display-prop: (
+  none: none,
+  flex: flex,
+  block: block,
+  inline: inline,
+  inline-block: inline-block
+)!default;
+
+@each $point in map-keys($grid-breakpoints) {
+  $infix: get-infix($point, $grid-breakpoints);
+  @include breakpoint-up($point, $grid-breakpoints) {
+    @each $name, $prop in $display-prop {
+      .d#{$infix}-#{$name} {display: #{$prop}!important}
+    }
   }
 }

@@ -1,6 +1,7 @@
-@each $pt in map-keys($grid-breakpoints) {
-  $infix: breakpoint-infix($pt, $grid-breakpoints);
-  @include media-breakpoint-up($pt) {
+//flex utils
+@each $point in map-keys($grid-breakpoints) {
+  $infix: get-infix($point, $grid-breakpoints);
+  @include breakpoint-up($point, $grid-breakpoints) {
     .flex#{$infix}-row            { flex-direction: row !important; }
     .flex#{$infix}-column         { flex-direction: column !important; }
     .flex#{$infix}-row-reverse    { flex-direction: row-reverse !important; }

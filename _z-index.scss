@@ -1,0 +1,17 @@
+$z-index: (
+  base:     1,
+  tooltip:  10,
+  dropdown: 100,
+  modal:    1000
+);
+@function depth($name) {
+  @if map_has_key($z-index, $name) {
+    @return map-get($z-index, $name);
+  }
+  @warn "The key #{$name} is not in the $depth map";
+  @return null;
+};
+
+.element {
+  z-index: depth(tooltip);
+}

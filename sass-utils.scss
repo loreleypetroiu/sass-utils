@@ -1,3 +1,4 @@
+@import "normalize";
 @import "breakpoints";
 @import "grid";
 @import "flex";
@@ -5,3 +6,7 @@
 @import "spacing";
 @import "display";
 @import "text";
+* {
+  margin: 0;
+  padding: 0;
+}
